@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.example.demo.dto.CatagoryDto;
 import com.example.demo.dto.CatagoryRespo;
-import com.example.demo.entity.Catagory;
 
 public interface CatagoryService {
 
@@ -13,5 +12,9 @@ public interface CatagoryService {
 	public List<CatagoryDto> getAllCatagory();
 
 	public List<CatagoryRespo> getActiveCatagory();
+
+	public CatagoryDto getCatagoryById(Integer id);
+
+	public Boolean deleteCatagoryById(Integer id);
 	
 }
