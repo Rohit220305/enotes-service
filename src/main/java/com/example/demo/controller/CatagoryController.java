@@ -14,19 +14,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.CatagoryDto;
 import com.example.demo.dto.CatagoryRespo;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.service.CatagoryService;
+
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/catagory")
 public class CatagoryController {
 	
 	@Autowired
 	private CatagoryService catagoryService;
+	private Object log;
 	
 	@PostMapping("/save")
 	public ResponseEntity<?> saveCatagory(@RequestBody CatagoryDto catagoryDto)
@@ -43,6 +47,8 @@ public class CatagoryController {
 	@GetMapping("/")
 	public ResponseEntity<?> getAllCatagory()
 	{
+//		String nm = null;
+//		nm.toUpperCase();
 		List<CatagoryDto> allCatagory = catagoryService.getAllCatagory();
 		
 		if (CollectionUtils.isEmpty(allCatagory)) {
@@ -67,16 +73,17 @@ public class CatagoryController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<?> getCatagoryDetailsById(@PathVariable Integer id)
+	public ResponseEntity<?> getCatagoryDetailsById(@PathVariable Integer id) throws Exception
 	{
+		
+		
 		CatagoryDto catagoryDto = catagoryService.getCatagoryById(id);
 		if(ObjectUtils.isEmpty(catagoryDto))
 		{
-			return new ResponseEntity<>("Catagory not found with id="+id,HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>("Catagory not found",HttpStatus.NOT_FOUND);
 		}
-		else {
-			return new ResponseEntity<>(catagoryDto,HttpStatus.OK);
-		}
+		return new ResponseEntity<>(catagoryDto,HttpStatus.OK);
+		
 	}
 	
 	@DeleteMapping("/{id}")

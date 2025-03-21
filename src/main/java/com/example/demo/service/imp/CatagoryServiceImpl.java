@@ -6,11 +6,13 @@ import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import com.example.demo.dto.CatagoryDto;
 import com.example.demo.dto.CatagoryRespo;
 import com.example.demo.entity.Catagory;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.CatagoryRepository;	
 import com.example.demo.service.CatagoryService;
 
@@ -69,9 +71,19 @@ public class CatagoryServiceImpl implements CatagoryService {
     }
 
     @Override
-    public CatagoryDto getCatagoryById(Integer id) {
-        Optional<Catagory> findByCatagoryId = catagoryRepo.findById(id);
-        return findByCatagoryId.map(catagory -> mapper.map(catagory, CatagoryDto.class)).orElse(null);
+    public CatagoryDto getCatagoryById(Integer id) throws Exception {
+        Catagory catagory = catagoryRepo.findByIdAndIsDeletedFalse(id)
+        			.orElseThrow(()->new ResourceNotFoundException("Catagory not found with id="+id));
+        
+        if(!ObjectUtils.isEmpty(catagory))
+        {
+        	if(catagory.getName() == null)
+        	{
+        		throw new IllegalArgumentException("name is null");
+        	}
+        	return mapper.map(catagory, CatagoryDto.class);
+        }
+        return null;
     }
 
     @Override

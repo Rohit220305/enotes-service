@@ -13,7 +13,7 @@ public interface CatagoryService {
 
 	public List<CatagoryRespo> getActiveCatagory();
 
-	public CatagoryDto getCatagoryById(Integer id);
+	public CatagoryDto getCatagoryById(Integer id) throws Exception;
 
 	public Boolean deleteCatagoryById(Integer id);
 	
