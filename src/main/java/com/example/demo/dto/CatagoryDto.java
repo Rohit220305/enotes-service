@@ -20,7 +20,7 @@ public class CatagoryDto {
 	
 	private String description;
 	
-	private boolean isActive;
+	private Boolean isActive;
 	
 	private Integer createdBy;
 	

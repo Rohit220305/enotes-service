@@ -26,12 +26,18 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@ExceptionHandler(ReflectiveOperationException.class)
+	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<?> handleResourceNotException(Exception e)
 	{
 		log.error("GlobalExceptionHandler :: handleResourceNotException ::",e.getMessage());
 		return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
 	}
 	
+	@ExceptionHandler(ValidationEcxception.class)
+	public ResponseEntity<?> handleValidationEcxception(ValidationEcxception e)
+	{
+		log.error("GlobalExceptionHandler :: handleValidationEcxception ::",e.getMessage());
+		return new ResponseEntity<>(e.getErrors(),HttpStatus.BAD_REQUEST);
+	}
 	
 }

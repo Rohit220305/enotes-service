@@ -3,7 +3,7 @@ package com.example.demo.service.imp;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
+import com.example.demo.util.Validation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
@@ -12,6 +12,7 @@ import org.springframework.util.ObjectUtils;
 import com.example.demo.dto.CatagoryDto;
 import com.example.demo.dto.CatagoryRespo;
 import com.example.demo.entity.Catagory;
+import com.example.demo.exception.GlobalExceptionHandler;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.CatagoryRepository;	
 import com.example.demo.service.CatagoryService;
@@ -19,14 +20,24 @@ import com.example.demo.service.CatagoryService;
 @Service
 public class CatagoryServiceImpl implements CatagoryService {
 
+
     @Autowired
     private CatagoryRepository catagoryRepo;
     
     @Autowired
     private ModelMapper mapper;
+    
+    @Autowired
+    private Validation validation;
+
+
 
     @Override
     public boolean saveCatagory(CatagoryDto catagoryDto) {
+    	
+    	// Validation checking
+    	validation.catagoryValidation(catagoryDto);
+    	
         Catagory catagory = mapper.map(catagoryDto, Catagory.class);
         
         if(ObjectUtils.isEmpty(catagory.getId()))
