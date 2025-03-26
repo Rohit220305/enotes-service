@@ -2,25 +2,26 @@ package com.example.demo.dto;
 
 import java.util.Date;
 
+import com.example.demo.entity.Catagory;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CatagoryDto {
+@Getter
+@Setter
+public class NotesDto {
 	
 	private Integer id;
 	
-	private String name;
+	private String tittle;
 	
 	private String description;
 	
-	private Boolean isActive;
+	private CatagoryDto catagory;
 	
 	private Integer createdBy;
 	
@@ -30,5 +31,14 @@ public class CatagoryDto {
 	
 	private Date updatedOn;
 	
-	
+	@AllArgsConstructor
+	@NoArgsConstructor
+	@Getter
+	@Setter
+	public static class CatagoryDto{
+		private Integer id;
+		
+		private String tittle;
+	}
+
 }
