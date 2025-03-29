@@ -1,12 +1,16 @@
 package com.example.demo.controller;
 
+import java.net.http.HttpHeaders;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.CollectionUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.dto.NotesDto;
+import com.example.demo.entity.FileDetails;
 import com.example.demo.service.NotesService;
 import com.example.demo.util.CommonUtil;
 
@@ -34,6 +39,21 @@ public class NotesController {
 			 return CommonUtil.createBuildResponseMessage("notes saved successfully", HttpStatus.CREATED);
 		}
 		return CommonUtil.createErroeResponseMessage("notes not saved", HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@GetMapping("/download/{id}")
+	public ResponseEntity<?> downloadFile(@PathVariable Integer id) throws Exception
+	{	
+		FileDetails fileDetails = notesService.getFileDetails(id);
+		byte[] data = notesService.downloadFile(fileDetails);
+		
+		org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+		String contentType = CommonUtil.getContentType(fileDetails.getOriginalFileName());
+		headers.setContentType(MediaType.parseMediaType(contentType));
+		headers.setContentDispositionFormData("attachment", fileDetails.getOriginalFileName());
+		
+		
+ 		return ResponseEntity.ok().headers(headers).body(data);
 	}
 	
 	@GetMapping("/")
