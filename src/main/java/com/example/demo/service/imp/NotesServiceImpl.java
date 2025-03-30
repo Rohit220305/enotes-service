@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.apache.catalina.mapper.Mapper;
 import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.config.ProjectConfig;
 import com.example.demo.dto.CatagoryDto;
 import com.example.demo.dto.NotesDto;
+import com.example.demo.dto.NotesDto.FilesDto;
 import com.example.demo.dto.NotesResponse;
 import com.example.demo.entity.Catagory;
 import com.example.demo.entity.FileDetails;
@@ -65,6 +67,11 @@ public class NotesServiceImpl implements NotesService{
 		
 		ObjectMapper ob = new ObjectMapper();
 		NotesDto notesDto = ob.readValue(notes, NotesDto.class);
+				
+		// update if id is given in request
+		if (ObjectUtils.isEmpty(notesDto.getId())) {
+			updateNotes(notesDto,file);
+		}
 		
 		// category validation notes
 		checkcatagoryExist(notesDto.getCatagory());
@@ -76,7 +83,9 @@ public class NotesServiceImpl implements NotesService{
 		if (!ObjectUtils.isEmpty(fileDetails)) {
 			notesMap.setFileDetails(fileDetails);
 		}else {
-			notesMap.setFileDetails(null);
+			if(ObjectUtils.isEmpty(notesDto.getId())) {
+				notesMap.setFileDetails(null);
+			}
 		}
 		
 		Notes saveNotes = notesRepo.save(notesMap);
@@ -88,6 +97,17 @@ public class NotesServiceImpl implements NotesService{
 	}
 
 	
+
+	private void updateNotes(NotesDto notesDto, MultipartFile file) throws Exception {
+	
+		Notes existNotes = notesRepo.findById(notesDto.getId()).orElseThrow(()-> new ResourceNotFoundException("Invalid notes id"));
+		
+		// user not choose any file at update time
+		if(!ObjectUtils.isEmpty(file)) {
+			notesDto.setFileDetails(mapper.map(existNotes.getFileDetails(), FilesDto.class));
+		}
+		
+	}
 
 	private FileDetails saveFileDetails(MultipartFile file) throws IOException {
 		
