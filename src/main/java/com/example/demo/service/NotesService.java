@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.dto.NotesDto;
+import com.example.demo.dto.NotesResponse;
 import com.example.demo.entity.FileDetails;
 import com.example.demo.exception.ResourceNotFoundException;
 
@@ -19,6 +20,8 @@ public interface NotesService {
 	public FileDetails getFileDetails(Integer id) throws Exception;
 
 	public byte[] downloadFile(FileDetails fileDetails)throws Exception;
+
+	public NotesResponse getAllNotesByUser(Integer userId, Integer pageNO, Integer pageSize);
 	
 	
 }
