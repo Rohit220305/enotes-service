@@ -1,5 +1,6 @@
 package com.example.demo.dto;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import com.example.demo.entity.Catagory;
@@ -35,7 +36,7 @@ public class NotesDto {
 	
 	private Boolean isDeleted;
 	
-	private Date deletedOn;
+	private LocalDateTime deletedOn;
 	
 	@AllArgsConstructor
 	@NoArgsConstructor
