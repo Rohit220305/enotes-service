@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.Buffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -326,6 +327,32 @@ public class NotesServiceImpl implements NotesService{
 		List<FavouriteNote> favouriteNotes = favouriteNotesRepo.findByUserId(userId);
 		
 		return favouriteNotes.stream().map(fn->mapper.map(fn,FavouriteNoteDto.class)).toList();
+	}
+
+	@Override
+	public Boolean copyNotes(Integer id) throws Exception {
+		
+		Notes notes = notesRepo.findById(id)
+				.orElseThrow(()-> new ResourceNotFoundException("Notes id invalid ! Not Found"));
+		
+//		Notes copyNotes = new Notes();
+//		copyNotes.setTittle(notes.getTittle());
+//		
+		
+		Notes copyNotes = Notes.builder()
+				.tittle(notes.getTittle())
+				.description(notes.getDescription())
+				.catagory(notes.getCatagory())
+				.isDeleted(false)
+				.fileDetails(null)
+				.build();
+
+		Notes saveCopyNote = notesRepo.save(copyNotes);
+		
+		if (!ObjectUtils.isEmpty(saveCopyNote)) {
+			return true;
+		}
+		return false;
 	}
 	
 	

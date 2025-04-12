@@ -72,7 +72,7 @@ public class NotesController {
 	@GetMapping("/user-notes")
 	public ResponseEntity<?> getAllNotesByUser(
 			@RequestParam(name = "pageNo", defaultValue = "0") Integer pageNO,
-			@RequestParam(name = "pageNo", defaultValue = "10") Integer pageSize)
+			@RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize)
 	{
 		Integer userId = 2;
 		
@@ -162,4 +162,14 @@ public class NotesController {
 		return CommonUtil.createBuildResponse(userFavouriteNotes, HttpStatus.OK);
 	}
 	
+	@GetMapping("/copy/{id}")
+	public ResponseEntity<?> copyNotes(@PathVariable Integer id) throws Exception
+	{
+		
+		Boolean copyNotes = notesService.copyNotes(id);
+		if(copyNotes) {
+			return CommonUtil.createBuildResponseMessage("Copied Success", HttpStatus.OK);
+		}
+		return CommonUtil.createBuildResponseMessage("Copy failed ! Try Again", HttpStatus.OK);
+	}
 }
