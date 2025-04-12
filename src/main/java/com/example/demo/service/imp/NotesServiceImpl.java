@@ -339,16 +339,10 @@ public class NotesServiceImpl implements NotesService{
 //		copyNotes.setTittle(notes.getTittle());
 //		
 		
-		Notes copyNotes = Notes.builder()
-				.tittle(notes.getTittle())
-				.description(notes.getDescription())
-				.catagory(notes.getCatagory())
-				.isDeleted(false)
-				.fileDetails(null)
-				.build();
-
+		Notes copyNotes = Notes.builder().tittle(notes.getTittle()).description(notes.getDescription())
+				.catagory(notes.getCatagory()).isDeleted(false).fileDetails(null).build();
+		//TODO : Need to check User Validation
 		Notes saveCopyNote = notesRepo.save(copyNotes);
-		
 		if (!ObjectUtils.isEmpty(saveCopyNote)) {
 			return true;
 		}
