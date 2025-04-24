@@ -16,15 +16,20 @@ import com.example.demo.dto.TodoDto.StatusDto;
 import com.example.demo.dto.UserDto;
 import com.example.demo.entity.Role;
 import com.example.demo.enums.TodoStatus;
+import com.example.demo.exception.ExistDataException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.exception.ValidationEcxception;
 import com.example.demo.repository.RoleRepository;
+import com.example.demo.repository.UserRepository;
 
 @Component
 public class Validation {
 	
 	@Autowired
 	private RoleRepository roleRepo;
+	
+	@Autowired
+	private UserRepository userRepo;
 	
 	public void catagoryValidation(CatagoryDto catagoryDto)
 	{
@@ -107,6 +112,12 @@ public class Validation {
 		if(!StringUtils.hasText(userDto.getEmail()) || !userDto.getEmail().matches(Constants.EMAIL_REGEX))
 		{
 			throw new IllegalArgumentException("Email is Invalid !!");
+		}else {
+			// validate email exists
+			Boolean existsEmail = userRepo.existsByEmail(userDto.getEmail());
+			if(existsEmail) {
+				throw new ExistDataException("Email already exists!");
+			}
 		}
 		
 		if(!StringUtils.hasText(userDto.getMobNo()) || !userDto.getMobNo().matches(Constants.MOB_REGEX))
